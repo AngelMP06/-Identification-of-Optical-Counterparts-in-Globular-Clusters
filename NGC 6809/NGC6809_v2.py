@@ -160,8 +160,6 @@ def find_MS(optical_data_filtered, bins_division, gráfico_comp, min_count , min
     if derivative_x[0] > 0 and 0 not in container_d:
         container_d.insert(0, -1)
 
-
-
     chain_width_d = 0
     maximum_d = 0
     for i in range(len(container_d)-1):
@@ -171,8 +169,6 @@ def find_MS(optical_data_filtered, bins_division, gráfico_comp, min_count , min
             chain_width_d = container_d[i]
     msto_start = chain_width_d+maximum_d + chain_width + 1
     msto_start_y_magnitude = msto_start/bins_division+ymin+1/(2*bins_division)
-
-    np.where(main_sequence_y_magnitude == msto_start_y_magnitude)
 
     maximum_lenght_MSTO = 0.70 # The height of the MSTO and SGB can't be greater than 0.70.
     maximum_lenght_index_MSTO = int(maximum_lenght_MSTO * bins_division)
@@ -691,6 +687,8 @@ def AGB_BS_classification(df, gráfico_comp, C, D, E, F, G, H):
 
     df.loc[mask_agb, f"position_{gráfico_comp}"] = "AGB"
 
+    """
+
     sns.scatterplot(data = df, x = f"{Color1} - {Color2}", y = f"{Color2}_Mag", hue = f"position_{gráfico_comp}", s = 10)
     plt.gca().invert_yaxis()
     plt.plot(np.append(polygon, [[C[0], C[1]]], axis = 0)[:,0], np.append(polygon, [[C[0], C[1]]], axis = 0)[:,1], c = "blue")
@@ -707,7 +705,11 @@ def AGB_BS_classification(df, gráfico_comp, C, D, E, F, G, H):
     plt.scatter([E[0], F[0], C[0], D[0], G[0], H[0]], [E[1], F[1], C[1], D[1], G[1], H[1]], color='black')
     plt.show()
 
+    """
+
     return df
+
+
 def generate_optical_file(path_optical, path_optical_arrival, distance_parsecs, Mag_min = -50, Mag_max = 50, RMS_max = 1, Fit_max = 1.5, Sharp_min = -2, Sharp_max = 2, CM_min = 80, bins_division = 20, min_count = 2, min_step = 2, bluer_limit = 0.5, significantly_bluer_limit = 1.0, redder_limit = 0.5, significantly_redder_limit = 1.0):
     
     optical_data = pd.read_csv(
