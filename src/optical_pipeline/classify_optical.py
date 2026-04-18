@@ -20,6 +20,7 @@ def generate_optical_file(path_optical, path_output, distance_parsecs,
 
     for graphic_comp in range(3):
         source_data[f"position_{graphic_comp}"] = "Unknown"
+
         # Step 3: Detect main sequence and MSTO
 
         main_sequence_y, min_smooth, max_smooth, index_SGB, index_MSTO, point_G, point_H  = find_main_sequence(source_data, 
@@ -49,10 +50,9 @@ def generate_optical_file(path_optical, path_output, distance_parsecs,
 
         column = f"position_{graphic_comp}"
         source_data[column] = df_classified[column]
-    print("Classification completed. Saving to CSV...")
+
+    print("Optical classification completed. Saving to CSV...")
+    
     source_data.to_csv(path_output, index=False)
 
 
-generate_optical_file(distance_parsecs = 5400, 
-                      path_optical = 'C:/Users/HP/Desktop/Programación/Workspace/Python/Astronomy/NGC 6809/NGC6809.txt', 
-                      path_output = 'C:/Users/HP/Desktop/Programación/Workspace/Python/Astronomy/NGC 6809/NGC6809_optical.csv')
