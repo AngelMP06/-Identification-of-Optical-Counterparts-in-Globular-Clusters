@@ -19,9 +19,7 @@ def creating_xray_csv(path_xray, path_output, BS_RA, BS_Decl, distance_parsecs):
     df = classify_sources(df)
     df = finalize_xray(df)  
 
-    print("X-ray classification completed. Saving to CSV...")
-
-    df.to_csv(path_output)
+    print("X-ray classification completed")
 
     return df
 

@@ -160,6 +160,7 @@ def compute_luminosity(df: pd.DataFrame, distance_parsecs: float) -> pd.DataFram
 
     df["Lx_soft"] = df["Fx_0.5-2.5"] * 4 * np.pi * d_cm**2
     df["Lx_hard"] = df["Fx_2.5-6.0"] * 4 * np.pi * d_cm**2
+    df["log_LX_soft"] = np.log10(df["Lx_soft"])
 
     df["Lx_total"] = df["Lx_soft"] + df["Lx_hard"]
     df["HR"] = df["Lx_soft"] / df["Lx_hard"]

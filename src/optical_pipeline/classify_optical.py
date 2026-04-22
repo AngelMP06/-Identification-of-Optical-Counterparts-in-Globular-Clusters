@@ -30,7 +30,7 @@ def generate_optical_file(path_optical, path_output, distance_parsecs,
                                                                                             min_step,
                                                                                             maximum_lenght_MSTO)
         # Step 4: Classify stars based on their position relative to the main sequence
-        
+
         df_classified = classify_optical_data(source_data,
                                 graphic_comp,
                                 main_sequence_y,
@@ -51,8 +51,8 @@ def generate_optical_file(path_optical, path_output, distance_parsecs,
         column = f"position_{graphic_comp}"
         source_data[column] = df_classified[column]
 
-    print("Optical classification completed. Saving to CSV...")
-    
-    source_data.to_csv(path_output, index=False)
+    print("Optical classification completed")
+
+    return source_data
 
 

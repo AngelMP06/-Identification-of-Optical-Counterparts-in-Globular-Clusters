@@ -421,7 +421,7 @@ path_arrival_xray = 'C:/Users/HP/Desktop/Curso de Python/Workspace/miweb/Astrono
 BS_RA = 295.0357771-295.0358042
 BS_Decl = -30.9811814+30.9811333
 distance_parsecs = 5400
-#creating_xray_csv(path_xray, path_arrival_xray, BS_RA, BS_Decl, distance_parsecs)
+creating_xray_csv(path_xray, path_arrival_xray, BS_RA, BS_Decl, distance_parsecs)
 
 
 path_optical = 'C:/Users/HP/Desktop/Curso de Python/Workspace/miweb/Astronomía/NGC 6218/optical_data.txt'

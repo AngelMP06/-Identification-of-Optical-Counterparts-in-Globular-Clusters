@@ -40,7 +40,7 @@ def classify_optical_data(df,
     )
 
     # Create regions based on CMD geometry
-    
+
     region1, region2, region3, region4 = create_4_regions(
         classified_data,
         graphic_comp,

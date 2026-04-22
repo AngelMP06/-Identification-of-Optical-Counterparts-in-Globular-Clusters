@@ -47,7 +47,7 @@ def create_4_regions(
     # --- Line A → B ---
     slope = (x_B - x_A) / (y_B - y_A)
     x_boundary = x_A + slope * (y - y_A)
-
+    #print(msto_y)
     # --- Masks ---
     mask_r1 = y >= y_max_ms
 
@@ -75,6 +75,5 @@ def create_4_regions(
     region2 = df[mask_r2]
     region3 = df[mask_r3]
     region4 = df[mask_r4]
-
 
     return region1, region2, region3, region4
