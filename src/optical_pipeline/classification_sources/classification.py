@@ -25,7 +25,7 @@ def classify_optical_data(df,
     
     # Classify stars based on their position relative to the main sequence
 
-    classified_data = classify_position_MS(
+    df = classify_position_MS(
     df,
     graphic_comp,
     main_sequence_y,
@@ -42,10 +42,10 @@ def classify_optical_data(df,
     # Create regions based on CMD geometry
 
     region1, region2, region3, region4 = create_4_regions(
-        classified_data,
+        df,
         graphic_comp,
         main_sequence_y,
-        main_sequence_y[index_MSTO],
+        msto_y,
         min_smooth
     )
 

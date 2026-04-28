@@ -61,8 +61,15 @@ def load_xray_data(path: str) -> pd.DataFrame:
     """
     with open(path, "r") as f:
         data = json.load(f)
+    
+    required_cols = ["Fx_0.5-2.5", "Fx_2.5-6.0", "RA", "Decl"]
+    df = pd.DataFrame(data)
+    missing = [c for c in required_cols if c not in df.columns]
 
-    return pd.DataFrame(data)
+    if missing:
+        raise ValueError(f"Missing columns: {missing}")
+
+    return df
 
 
 # ============================================================

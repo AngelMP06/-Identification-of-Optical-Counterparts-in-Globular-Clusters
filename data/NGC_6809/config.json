@@ -1,0 +1,7 @@
+{
+  "BS_RA": -0.0000271,
+  "BS_Decl": -0.0000481,
+  "distance_parsecs": 5400,
+  "xray_file": "xray_sources.txt",
+  "optical_file": "optical_sources.txt"
+}

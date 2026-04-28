@@ -6,13 +6,13 @@ from ..utils.colors import get_color_columns
 
 
 def HB_classification(
-    df,
+    region4,
     graphic_comp,
     eps=0.4,
     min_samples=15
 ):
     """
-    Identify Horizontal Branch (HB) stars using clustering.
+    Take the region 4 and identify Horizontal Branch (HB) stars using DBSCAN clustering.
 
     Steps:
     - Apply DBSCAN clustering in CMD space
@@ -21,7 +21,7 @@ def HB_classification(
     - Return bounding points C, D, E
     """
 
-    df = df.copy()
+    region4 = region4.copy()
 
     # --- Colors ---
     Color1, Color2 = get_color_columns(graphic_comp)
@@ -30,8 +30,8 @@ def HB_classification(
     y_col = f"{Color2}_Mag"
     pos_col = f"position_{graphic_comp}"
 
-    x = df[x_col].values
-    y = df[y_col].values
+    x = region4[x_col].values
+    y = region4[y_col].values
 
     # --- Prepare data ---
     X = np.column_stack((x, y))
@@ -46,7 +46,7 @@ def HB_classification(
 
     # --- Edge case: no clusters ---
     if len(clusters) == 0:
-        return df, None, None, None
+        return region4, None, None, None
 
     # --- Select cluster ---
     if len(clusters) == 1:
@@ -76,12 +76,12 @@ def HB_classification(
     x_sel = x[mask]
     y_sel = y[mask]
 
-    # --- Define bounding points ---
-    C = [x_sel.min(), y_sel.max()]
-    D = [x_sel.max(), y_sel.min()]
-    E = [x_sel.max(), y_sel.max()]
+    # --- Define bounding points, they will be used later ---
+    point_C = [x_sel.min(), y_sel.max()]
+    point_D = [x_sel.max(), y_sel.min()]
+    point_E = [x_sel.max(), y_sel.max()]
 
     # --- Assign labels ---
-    df.loc[mask, pos_col] = "HB"
+    region4.loc[mask, pos_col] = "HB"
 
-    return df, C, D, E
+    return region4, point_C, point_D, point_E

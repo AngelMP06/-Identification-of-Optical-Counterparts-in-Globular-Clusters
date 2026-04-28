@@ -34,9 +34,7 @@ def find_main_sequence(df, bins_division, graphic_comp, min_count, min_step, max
     main_sequence_y, normalized_min, normalized_max, normalized_center, MS_index_start = extract_main_sequence(center_line, min_edge, max_edge, bins_division, xmin, ymin)
 
     # --- Smooth ---
-    min_smooth, max_smooth, center_smooth = smooth_sequence(
-        normalized_min, normalized_max, normalized_center, bins_division, xmin
-    )
+    min_smooth, max_smooth, center_smooth = smooth_sequence(normalized_min, normalized_max, normalized_center)
 
     # --- MSTO detection ---
     index_MSTO, msto_y = detect_msto(main_sequence_y, center_smooth, bins_division, ymin, MS_index_start)
@@ -64,8 +62,8 @@ def find_main_sequence(df, bins_division, graphic_comp, min_count, min_step, max
         index_MSTO -= shift
         index_SGB -= shift
 
-    # --- Points G and H ---
-    G = [max_smooth[index_MSTO], msto_y]
-    H = [min_smooth[index_MSTO], msto_y]
+    # --- Points G and I will be used later. ---
+    point_G = [max_smooth[index_MSTO], msto_y]
+    point_I = [min_smooth[index_MSTO], msto_y]
 
-    return main_sequence_y, min_smooth, max_smooth, index_SGB, index_MSTO, G, H
+    return main_sequence_y, min_smooth, max_smooth, index_SGB, index_MSTO, point_G, point_I, msto_y

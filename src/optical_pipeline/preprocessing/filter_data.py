@@ -1,7 +1,5 @@
 import numpy as np
 import pandas as pd
-import math
-
 
 def filter_data(
     df: pd.DataFrame,

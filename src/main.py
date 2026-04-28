@@ -1,18 +1,20 @@
 from src.probability_pipeline.get_probability_counterpart import run_probability_pipeline
-from src.optical_pipeline.classify_optical import generate_optical_file
-from src.xray_pipeline.classify_xray import creating_xray_csv
+from src.optical_pipeline.classify_optical import optical_classification
+from src.xray_pipeline.classify_xray import x_ray_classification
 from src.find_candidates_pipeline.find_candidates import run_crossmatch_pipeline
+from src.load_cluster_data import load_cluster_config
 
-df_optical = generate_optical_file(distance_parsecs = 5400, 
-                      path_optical = 'C:/Users/HP/Desktop/Programación/Workspace/Python/Astronomy/NGC 6809/NGC6809.txt', 
-                      path_output = 'C:/Users/HP/Desktop/Programación/Workspace/Python/Astronomy/NGC 6809/NGC6809_optical.csv')
+params = load_cluster_config("NGC_6809")
 
-df_xray = creating_xray_csv(
-    path_xray="C:/Users/HP/Desktop/Programación/Workspace/Python/Astronomy/NGC 6809/sources.txt",
-    path_output="C:/Users/HP/Desktop/Programación/Workspace/Python/Astronomy/NGC 6809/NGC6809_xray.csv",
-    BS_RA = 295.0357771-295.0358042,
-    BS_Decl = -30.9811814+30.9811333,
-    distance_parsecs=5400
+
+df_optical = optical_classification(distance_parsecs = params["distance_parsecs"], 
+                      path_optical = params["path_optical"])
+
+df_xray = x_ray_classification(
+    path_xray=params["path_xray"],
+    BS_RA = params["BS_RA"],
+    BS_Decl = params["BS_Decl"],
+    distance_parsecs=params["distance_parsecs"]
 )
 
 df_matches = run_crossmatch_pipeline(df_optical, df_xray)

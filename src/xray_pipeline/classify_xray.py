@@ -11,7 +11,7 @@ from .module_xray import (
     finalize_xray
 )
 
-def creating_xray_csv(path_xray, path_output, BS_RA, BS_Decl, distance_parsecs):
+def x_ray_classification(path_xray, BS_RA, BS_Decl, distance_parsecs):
     df = load_xray_data(path_xray)
     df = parse_coordinates(df, BS_RA, BS_Decl)
     df = compute_counts_and_errors(df)

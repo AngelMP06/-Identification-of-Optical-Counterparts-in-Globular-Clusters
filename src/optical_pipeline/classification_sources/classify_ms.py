@@ -18,12 +18,9 @@ def classify_position_MS(
     """
     Classify stars based on their position relative to the Main Sequence (MS).
 
-    The classification is done segment-by-segment using interpolated MS boundaries.
+    - The classification is done segment-by-segment using interpolated MS boundaries.
 
-    Returns
-    -------
-    pd.DataFrame
-        Copy of input DataFrame with a new column: position_{graphic_comp}
+    - The classification also depends on the position with respect to the MSTO and SGB
     """
 
     # --- Copy to avoid modifying original ---

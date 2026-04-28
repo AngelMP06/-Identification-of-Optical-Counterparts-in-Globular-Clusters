@@ -16,6 +16,8 @@ def create_4_regions(
     - R2: Between MS and MSTO
     - R3: Right side (RGB / AGB candidates)
     - R4: Left side (HB / BS candidates)
+
+    R3 and R4 are separated by a line formed between the top left of the MS (point A) and the top left of the RGB or MSTO (point B).
     """
 
     # --- Copy (safe) ---

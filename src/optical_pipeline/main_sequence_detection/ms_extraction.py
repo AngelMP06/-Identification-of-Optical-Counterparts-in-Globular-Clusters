@@ -18,6 +18,8 @@ def get_max_width_bins(H, min_step):
     - Tracks consecutive regions
     - Uses 'insured' segments to recover sequences
     - Selects the widest valid MS segment
+
+    And returns the indexes and the distance in bins
     """
 
     center_line = []
@@ -97,7 +99,7 @@ def get_max_width_bins(H, min_step):
 
 def extract_main_sequence(center_line, min_edge, max_edge, bins_division, xmin, ymin):
     """
-    Extract main sequence using the center line in the bin space.
+    Extract main sequence using the center line in the bin space and returns the values in magnitude.
     The main sequence is defined as the longest contiguous segment of non-zero values in the center line.
     """
     
@@ -136,4 +138,6 @@ def extract_main_sequence(center_line, min_edge, max_edge, bins_division, xmin, 
 
     main_sequence_y = main_sequence / bins_division  + ymin + offset
 
-    return main_sequence_y, normalized_min, normalized_max, normalized_center, start + 1
+    MS_index_start = start + 1
+
+    return main_sequence_y, normalized_min, normalized_max, normalized_center, MS_index_start

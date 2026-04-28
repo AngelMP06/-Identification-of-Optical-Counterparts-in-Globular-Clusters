@@ -1,20 +1,34 @@
 import numpy as np
 
 
-def detect_msto(y_vals, x_smooth, bins_division, ymin, MS_index_start):
-    derivative = np.diff(x_smooth)
+def detect_msto(main_sequence_y, center_smooth, bins_division, ymin, MS_index_start):
+    """
+    Detect the Main Sequence Turn-Off (MSTO) point from the smoothed
+    main sequence ridge line.
+
+    The MSTO is identified as the point where the main sequence stops
+    decreasing in magnitude and begins to turn toward the red (i.e.,
+    where the slope of the sequence changes sign).
+
+    This is done by computing the discrete derivative of the smoothed
+    central ridge (center_smooth) and locating the first transition
+    from non-positive to positive slope.    
+    """
+
+
+    derivative = np.diff(center_smooth)
 
     negative = np.where(derivative <= 0)[0]
 
     if len(negative) == 0:
         
-        return 0, y_vals[0]
+        return 0, main_sequence_y[0]
 
     # Geth the first index where the derivative changes from negative to positive
-    msto_index = next((i for i, x in enumerate(np.diff(np.append(negative, negative[-1]))) if x != 1), -1)
+    index_MSTO = next((i for i, x in enumerate(np.diff(np.append(negative, negative[-1]))) if x != 1), -1)
     
     offset = 1 / (2 * bins_division)
 
-    msto_y = (msto_index + MS_index_start) / bins_division + ymin + offset
+    msto_y = (index_MSTO + MS_index_start) / bins_division + ymin + offset
 
-    return msto_index, msto_y
+    return index_MSTO, msto_y
