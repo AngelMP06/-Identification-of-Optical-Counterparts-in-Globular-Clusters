@@ -9,14 +9,41 @@ from .ms_extraction import extract_main_sequence
 def find_main_sequence(df, bins_division, graphic_comp, min_count, min_step, maximum_lenght_MSTO):
     """
     Detect the main sequence (MS), its boundaries, and MSTO.
+    
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Input dataset with photometric data.
+    bins_division : int
+        Resolution of the CMD histogram.
+    graphic_comp : int
+        Index defining the CMD configuration used.
+    min_count : int
+        Minimum counts required to keep histogram bins.
+    min_step : int
+        Minimum width for valid MS segments.
+    maximum_lenght_MSTO : float
+        Maximum allowed vertical extent of the MSTO region.
 
-    Returns:
-        main_sequence_y
-        min_smooth
-        max_smooth
-        index_SGB
-        index_MSTO
-        G, H points
+    Returns
+    -------
+
+    main_sequence_y : array-like
+        Y-axis values of the MS.
+    min_smooth : array-like
+        Smoothed lower boundary of the MS.
+    max_smooth : array-like
+        Smoothed upper boundary of the MS.
+    index_SGB : int
+        Index marking the start of the Subgiant Branch.
+    index_MSTO : int
+        Index of the Main Sequence Turn-Off.
+    point_G : list
+        Right boundary point at MSTO.
+    point_H : list
+        Left boundary point at MSTO.
+    msto_y : float
+        Y-axis (magnitude) of the MSTO.
     """
 
     # --- Histogram ---
@@ -62,8 +89,8 @@ def find_main_sequence(df, bins_division, graphic_comp, min_count, min_step, max
         index_MSTO -= shift
         index_SGB -= shift
 
-    # --- Points G and I will be used later. ---
+    # --- Points G and H will be used later. ---
     point_G = [max_smooth[index_MSTO], msto_y]
-    point_I = [min_smooth[index_MSTO], msto_y]
+    point_H = [min_smooth[index_MSTO], msto_y]
 
-    return main_sequence_y, min_smooth, max_smooth, index_SGB, index_MSTO, point_G, point_I, msto_y
+    return main_sequence_y, min_smooth, max_smooth, index_SGB, index_MSTO, point_G, point_H, msto_y

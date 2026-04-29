@@ -6,16 +6,10 @@ from sklearn.cluster import DBSCAN
 from ..utils.colors import get_color_columns
 
 
-def GB_classification(
-    region3,
-    graphic_comp,
-    bins_division,
-    msto_y,
-    eps=0.4,
-    min_samples=15
-):
+def DBSCAN_classification(region3, graphic_comp, eps=0.4, min_samples=15):
+
     """
-    Classify the Red Giant Branch (RGB), Red Stragglers (RS), and Super Giants Branch (SGB) in region3.
+    Apply DBSCAN clustering in the CMD and label the bottom-left cluster as the RGB.
     """
 
     region3 = region3.copy()
@@ -38,7 +32,7 @@ def GB_classification(
     clusters = [l for l in set(labels) if l != -1]
 
     if len(clusters) == 0:
-        return region3, None
+        return region3, None, None, None
 
     # --- Select RGB cluster (bottom-right) ---
     if len(clusters) == 1:
@@ -71,8 +65,17 @@ def GB_classification(
 
     # --- Assign RGB ---
     region3.loc[mask_rgb & (region3[pos_col] == "Unknown"), pos_col] = "RGB"
+    return region3, point_F, x_sel, y_sel
 
-    # --- Histogram for ridge ---
+def ridge_line_extraction(x_sel, y_sel, bins_division, msto_y, point_F):
+
+
+    """
+    Extract the central ridge line of the Red Giant Branch (RGB) using a 2D histogram.
+    This ridge line is extender to cover the bottom left point of the histogram and the point F.
+    """
+
+# --- Histogram for ridge ---
     xmin, xmax = x_sel.min(), x_sel.max()
     ymin, ymax = y_sel.min(), y_sel.max()
 
@@ -106,6 +109,27 @@ def GB_classification(
     ridge_x_full = np.concatenate(([xmin], ridge_x, [point_F[0]]))
     ridge_y_full = np.concatenate(([msto_y], ridge_y, [point_F[1]]))
 
+    return ridge_x_full, ridge_y_full
+    
+def SGB_RS_classification(region3, graphic_comp, ridge_x_full, ridge_y_full, point_F):
+    
+    """
+    Classify the sources as Red Supergiant Branch (RSGB) if they are to the right of point F, 
+    and as Red Lagging if they are to the left of point F and below the ridge line.
+    """
+
+    region3 = region3.copy()
+
+    # --- Colors ---
+    Color1, Color2 = get_color_columns(graphic_comp)
+    y_col= f"{Color2}_Mag"
+    x_col = f"{Color1} - {Color2}"
+
+    x = region3[x_col].values
+    y = region3[y_col].values
+    pos_col = f"position_{graphic_comp}"
+    
+    
     # --- Interpolation ---
     ridge_func = interp1d(
         ridge_x_full,
@@ -118,9 +142,11 @@ def GB_classification(
     # --- Vectorized classification ---
     y_ridge = ridge_func(x)
 
+    # --- Classify Red Super Giant Branch (RSGB) sourecs as the ones at the right of the point F ---
     mask_super = x > point_F[0] 
+
+    # --- Classify the sources below the ridge line as Red Stragglers (RS) (Remember that the y axis is inverted)---
     mask_straggler = (x <= point_F[0]) & (y > y_ridge)
-    mask_unknown = ~(mask_super | mask_straggler)
 
     # Apply only where still Unknown
     unknown_mask = region3[pos_col] == "Unknown"
@@ -128,8 +154,33 @@ def GB_classification(
     region3.loc[unknown_mask & mask_super, pos_col] = "Red Super Giant Branch"
     region3.loc[unknown_mask & mask_straggler, pos_col] = "Red Straggler"
 
-    # --- Normalize MSTO / SGB labels ---
-    region3.loc[region3[pos_col].isin(["redder than MSTO", "bluer than MSTO"]), pos_col] = "MSTO"
-    region3.loc[region3[pos_col].isin(["redder than SGB", "bluer than SGB"]), pos_col] = "Sub Giant Branch"
+
+    return region3
+
+def RGB_classification(region3, graphic_comp, bins_division, msto_y, eps=0.4, min_samples=15):
+    """
+    Analize sources of region 3 of the CMD to identify the Red Giant Branch (RGB), Red Stragglers (RS), and Red Super Giant Branch (RSGB).
+
+    Steps:
+    - Apply DBSCAN clustering in CMD and label the bottom-left cluster as the RGB.
+    - Use a 2d histogram to identify all the RGB sources.
+    - Define the point F as the top-right boundary of the RGB.
+    - Compute the central ridge line of the RGB and classify the sources below this line as Red Stragglers (RS).
+    - Classify Red Super Giant Branch (RSGB) sourecs as the ones at the right of the point F.
+    """
+    region3 = region3.copy()
+
+    # --- Step 1: DBSCAN classification ---
+    region3, point_F, x_sel, y_sel = DBSCAN_classification(region3, graphic_comp, eps, min_samples)
+
+    if point_F is None:
+        return region3, None
+    
+    # --- Step 2: Ridge line extraction ---
+    ridge_x_full, ridge_y_full = ridge_line_extraction(x_sel, y_sel, bins_division, msto_y, point_F)
+
+    # --- Step 3: SGB and RS classification ---
+    region3 = SGB_RS_classification(region3, graphic_comp, ridge_x_full, ridge_y_full, point_F)
 
     return region3, point_F
+

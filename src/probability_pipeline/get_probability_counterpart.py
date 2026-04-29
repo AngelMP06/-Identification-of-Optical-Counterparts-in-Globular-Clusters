@@ -4,18 +4,44 @@ from .final_output import finalize_output
 
 def run_probability_pipeline(df_matches):
 
+    """
+    Compute the probability that each optical source is the true counterpart
+    of an X-ray source.
+
+    This function applies a scoring and probability framework combining
+    X-ray properties, optical information, and positional constraints.
+    Scores are converted into probabilities, weighted, normalized, and
+    adjusted with penalties to produce a final likelihood for each candidate.
+
+    Pipeline steps:
+    1) Initialize the scores of being AB, CV, LMXRB
+    2) Apply score based on the hardness classification, Mv vs X-ray, and optical classification
+    3) Apply weighting and normalization
+    4) Penalize candidates based on matching radius
+    5) Rescale probabilities across classes
+    6) Generate the final output table
+
+    Parameters
+    ----------
+    df_matches : pd.DataFrame
+        DataFrame containing matched optical-X_ray candidates.
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with final probabilities and classification scores
+        for each candidate counterpart.
+    """
+
     df = df_matches.copy()
-    
-    # --- CLEAN ---
-    df = df[(df["opt_id"].notna()) & (df["n_sources"] > 0)].reset_index(drop=True)
-    
+
     # --- SCORES ---
     df = initialize_scores(df)
-    df = apply_hardness_score(df, HC_score=0.25)
-    df = apply_mv_xray_score(df, MV_XR_score=0.25)
-    df = apply_optical_score(df, optical_score=0.5)
+    df = apply_hardness_score(df)
+    df = apply_mv_xray_score(df)
+    df = apply_optical_score(df)
 
-    # --- GET PROBABILITIES --- 
+    # --- GET PROBABILITIES ---
     df, total_prob = compute_base_probability(df)
     df = apply_weighting(df)
     df = normalize_probabilities(df, total_prob)
@@ -23,6 +49,8 @@ def run_probability_pipeline(df_matches):
     df = rescale_classes(df)
 
     # --- FINAL ---
-    df_final = finalize_output(df)
+    df_final = finalize_output(df)      
+
+    print("Probability pipeline completed successfully.")
 
     return df_final

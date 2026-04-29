@@ -76,7 +76,7 @@ def classify_position_MS(
                 "bluer than MS L2",
                 "bluer than SGB",
                 "Sub Giant Branch",
-                "redder than SGB",
+                "Sub-Sub-Giant Branch",
                 "redder than MS L2",
             ]
 
@@ -86,7 +86,7 @@ def classify_position_MS(
                 "bluer than MS L2",
                 "bluer than MSTO",
                 "MSTO",
-                "redder than MSTO",
+                "Sub-Sub-Giant Branch",
                 "redder than MS L2",
             ]
 

@@ -9,10 +9,30 @@ def optical_classification(path_optical, distance_parsecs,
                           min_count = 2, min_step = 2, maximum_lenght_MSTO = 0.70,
                           bluer_limit = 0.5, significantly_bluer_limit = 1.0, redder_limit = 0.5, significantly_redder_limit = 1.0):
     """
-    Classify the sources according to their position in the CMD.
+    Perform optical source classification using Color-Magnitude Diagrams (CMDs).
 
-    Returns:
-        source_data: DataFrame
+    This function runs the full optical analysis pipeline, including data loading,
+    quality filtering, main sequence detection, and classification of sources
+    based on their position relative to the Main Sequence (MS) and the
+    Main Sequence Turn-Off (MSTO).
+
+    The classification is performed across multiple CMD configurations
+    (graphic_comp), allowing a more robust identification of stellar populations.
+
+    Parameters
+    ----------
+    path_optical : str
+        Path to the optical catalog file.
+    distance_parsecs : float
+        Distance to the cluster in parsecs.
+        
+    default parameters for filtering and classification can be adjusted as needed.
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame containing the filtered and classified optical sources,
+        including classification labels for each CMD configuration.
     """
 
     # Step 1: We load all the optical data we need and assign the column names.
@@ -28,13 +48,13 @@ def optical_classification(path_optical, distance_parsecs,
 
         # Step 3: We now are going to find the left and right edge of the main sequence and main sequence turn off (MSTO).
 
-        main_sequence_y, min_smooth, max_smooth, index_SGB, index_MSTO, point_G, point_I, msto_y = find_main_sequence(source_data, 
+        main_sequence_y, min_smooth, max_smooth, index_SGB, index_MSTO, point_G, point_H, msto_y = find_main_sequence(source_data, 
                                                                                             bins_division, 
                                                                                             graphic_comp, 
                                                                                             min_count,     
                                                                                             min_step,
                                                                                             maximum_lenght_MSTO)
-        # Step 4: Classify stars based on their position relative to the main sequence
+        # Step 4: Classify stars based on their position in the CMD relative to the main sequence and Giant Branch.
 
         df_classified = classify_optical_data(source_data,
                                 graphic_comp,
@@ -50,7 +70,7 @@ def optical_classification(path_optical, distance_parsecs,
                                 bins_division,
                                 msto_y,
                                 point_G,
-                                point_I
+                                point_H
                                 )
 
         column = f"position_{graphic_comp}"

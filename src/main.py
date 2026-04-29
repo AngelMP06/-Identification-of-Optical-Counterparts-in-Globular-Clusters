@@ -19,6 +19,8 @@ df_xray = x_ray_classification(
 
 df_matches = run_crossmatch_pipeline(df_optical, df_xray)
 
-probabilities_df = run_probability_pipeline(df_matches)
+probabilities_candidates = run_probability_pipeline(df_matches)
 
-print(probabilities_df)
+print(probabilities_candidates)
+
+print("A source is likely to be a counterpart if it has more than 80% on P_counterpart (%)")
