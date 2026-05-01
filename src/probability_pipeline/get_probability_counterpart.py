@@ -4,7 +4,7 @@ from .scores import initialize_scores, apply_hardness_score, apply_mv_xray_score
 from .probabilities import compute_base_probability, apply_weighting, normalize_probabilities, apply_radius_penalty, rescale_classes
 from .final_output import finalize_output
 
-def run_probability_pipeline(df_matches: pd.DataFrame) -> pd.DataFrame:
+def run_probability_pipeline(df_matches: pd.DataFrame, show_probability_plots: bool = False) -> pd.DataFrame:
 
     """
     Compute the probability that each optical source is the true counterpart
@@ -27,7 +27,8 @@ def run_probability_pipeline(df_matches: pd.DataFrame) -> pd.DataFrame:
     ----------
     df_matches : pd.DataFrame
         DataFrame containing matched optical-X_ray candidates.
-
+    show_probability_plots : bool, optional
+        Whether to display the results of the probability pipeline, by default False
     Returns
     -------
     pd.DataFrame
@@ -52,7 +53,16 @@ def run_probability_pipeline(df_matches: pd.DataFrame) -> pd.DataFrame:
 
     # --- FINAL ---
     df_final = finalize_output(df)      
-
+    print("\n")
     print("Probability pipeline completed successfully.")
 
-    return df_final
+    if show_probability_plots:
+        print("\n")
+        print("####################################################")
+        print("Probability pipeline results:")
+        print("####################################################")
+        print("\n")
+        print(df_final)
+    filter = df_final["P_counterpart (%)"] >= 80
+
+    return df_final.loc[filter]

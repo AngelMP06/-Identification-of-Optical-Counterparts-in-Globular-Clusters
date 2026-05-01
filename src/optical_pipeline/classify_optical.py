@@ -34,6 +34,10 @@ def optical_classification(path_optical : str,
         Path to the optical catalog file.
     distance_parsecs : float
         Distance to the cluster in parsecs.
+    cluster_name : str
+        Name of the cluster being analyzed (used for output organization).
+    show_plots : bool, optional
+        Whether to display the CMD plots with classifications (default is False).
     bins_division : int, optional
         Resolution parameter for histogram-based methods (default is 20).
     filter : FilterParams, optional
@@ -148,9 +152,7 @@ def optical_classification(path_optical : str,
     
             plt.show()
 
-
-
-
+    print("\n")
     print("Optical classification completed")
 
     return df

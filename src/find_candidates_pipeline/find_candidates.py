@@ -3,7 +3,7 @@ import pandas as pd
 
 from .module import compute_angular_distance, build_row
 
-def run_crossmatch_pipeline(optical_data: pd.DataFrame, xray_data: pd.DataFrame) -> pd.DataFrame:
+def run_crossmatch_pipeline(optical_data: pd.DataFrame, xray_data: pd.DataFrame, show_crossmatch_DaraFrame: bool = False) -> pd.DataFrame:
 
     """
     Identify optical counterparts for X-ray sources using positional crossmatching.
@@ -22,6 +22,8 @@ def run_crossmatch_pipeline(optical_data: pd.DataFrame, xray_data: pd.DataFrame)
         Optical catalog with positions and photometric classifications.
     xray_data : pd.DataFrame
         X-ray catalog including positions, uncertainties, and classifications.
+    show_crossmatch_DaraFrame : bool, optional
+        Whether to display the DataFrame of matched candidates (by default False)
 
     Returns
     -------
@@ -82,6 +84,15 @@ def run_crossmatch_pipeline(optical_data: pd.DataFrame, xray_data: pd.DataFrame)
     
     df_matches =  pd.DataFrame(results)
     
+    print("\n")
     print("Candidate search completed")
+
+    if show_crossmatch_DaraFrame:
+        print("\n")
+        print("####################################################")
+        print("Possible counterparts found for each X-ray source:")
+        print("####################################################")
+        print("\n")
+        print(df_matches)
 
     return df_matches

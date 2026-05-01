@@ -32,6 +32,10 @@ def x_ray_classification(path_xray: str, BS_RA: float, BS_Decl: float, distance_
         Declination of the cluster center.
     distance_parsecs : float
         Distance to the cluster in parsecs.
+    cluster_name : str
+        Name of the globular cluster (used for output organization).
+    show_plot : bool, optional
+        Whether to display the X-ray classification plot (by default False)
 
     Returns
     -------
@@ -77,7 +81,8 @@ def x_ray_classification(path_xray: str, BS_RA: float, BS_Decl: float, distance_
             print(f"New plot saved: {full_path}")
 
         plt.show()
-
+        
+    print("\n")
     print("X-ray classification completed")
 
     return df
