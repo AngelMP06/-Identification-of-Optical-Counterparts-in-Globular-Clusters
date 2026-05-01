@@ -8,13 +8,15 @@ from src.load_cluster_data import load_cluster_config
 
 from src.models import FilterParams, MSDetectionParams
 
-def run_full_pipeline(cluster_name: str, show_optical_plots: bool = True) -> pd.DataFrame:
+def run_full_pipeline(cluster_name: str, 
+                      show_optical_plots: bool = False,
+                      show_xray_plot: bool = False) -> pd.DataFrame:
 
     params = load_cluster_config(cluster_name)
 
     df_optical = optical_classification(params["path_optical"], params["distance_parsecs"], cluster_name, show_optical_plots)
 
-    df_xray = x_ray_classification(params["path_xray"], params["BS_RA"], params["BS_Decl"], params["distance_parsecs"])
+    df_xray = x_ray_classification(params["path_xray"], params["BS_RA"], params["BS_Decl"], params["distance_parsecs"], cluster_name, show_xray_plot)
 
     df_matches = run_crossmatch_pipeline(df_optical, df_xray)
 

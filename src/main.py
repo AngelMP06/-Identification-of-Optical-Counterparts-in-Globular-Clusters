@@ -2,7 +2,7 @@ from src.full_pipeline import run_full_pipeline
 
 if __name__ == "__main__":
 
-    probabilities = run_full_pipeline("NGC_6809")
+    probabilities = run_full_pipeline("NGC_6809", show_optical_plots=False, show_xray_plot=True)
 
     print(probabilities)
 
