@@ -1,13 +1,13 @@
 import numpy as np
 import pandas as pd
 
-from histogram import compute_histogram
-from ms_extraction import filter_histogram, get_max_width_bins
-from smoothing import smooth_sequence
-from msto_detection import detect_msto
-from ms_extraction import extract_main_sequence
+from .histogram import compute_histogram
+from .ms_extraction import filter_histogram, get_max_width_bins
+from .smoothing import smooth_sequence
+from .msto_detection import detect_msto
+from .ms_extraction import extract_main_sequence
 
-from models import MainSequenceResults, Points, MSDetectionParams
+from src.models import MainSequenceResults, Points, MSDetectionParams
 
 def find_main_sequence(df: pd.DataFrame,
                        bins_division: int, 

@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from models import FilterParams
+from src.models import FilterParams
 
 def filter_data(df: pd.DataFrame, filter_params: FilterParams) -> pd.DataFrame:
     """

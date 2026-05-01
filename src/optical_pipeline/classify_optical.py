@@ -1,11 +1,11 @@
 import pandas as pd
 
-from optical_pipeline.classification_sources.classification import classify_optical_data
-from optical_pipeline.preprocessing.load_data import load_optical_data
-from optical_pipeline.preprocessing.filter_data import filter_data
-from optical_pipeline.main_sequence_detection.find_main_sequence import find_main_sequence
+from src.optical_pipeline.classification_sources.classification import classify_optical_data
+from src.optical_pipeline.preprocessing.load_data import load_optical_data
+from src.optical_pipeline.preprocessing.filter_data import filter_data
+from src.optical_pipeline.main_sequence_detection.find_main_sequence import find_main_sequence
 
-from models import FilterParams, MSDetectionParams, MainSequenceResults, Points
+from src.models import FilterParams, MSDetectionParams, MainSequenceResults, Points
 
 def optical_classification(path_optical : str, 
                            distance_parsecs : float, 
