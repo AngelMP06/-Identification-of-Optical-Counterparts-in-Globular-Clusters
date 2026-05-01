@@ -38,6 +38,7 @@ def load_optical_data(path: str, distance_parsecs: float) -> pd.DataFrame:
         header=None
     )
 
+    # --- If the columns are not as expected, raise an error ---
     if df.shape[1] != len(COLUMNS):
         raise ValueError(
             f"Expected {len(COLUMNS)} columns, got {df.shape[1]}"
@@ -49,6 +50,7 @@ def load_optical_data(path: str, distance_parsecs: float) -> pd.DataFrame:
     # --- Compute visible magnitude and absolute magnitude ---
     df["Visible"] = (df["438_Mag"] + df["606_Mag"]) / 2
     df["Mv"] = df["Visible"] - 5 * math.log10(distance_parsecs / 10)
+
 
     # --- Drop unnecessary columns ---
     columns_to_drop = ["X", "Y", "Iteration_found"]

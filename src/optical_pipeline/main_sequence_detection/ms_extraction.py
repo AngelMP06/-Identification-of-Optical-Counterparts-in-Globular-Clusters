@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def filter_histogram(H, min_count):
+def filter_histogram(H: np.ndarray, min_count: int) -> np.ndarray:
     """
     Remove low-density bins from histogram.
     """
@@ -10,7 +10,7 @@ def filter_histogram(H, min_count):
     return H
 
 
-def get_max_width_bins(H, min_step):
+def get_max_width_bins(H: np.ndarray, min_step: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Extract the max width where there are counts for each horizontal line in the histogram.
 
@@ -19,7 +19,7 @@ def get_max_width_bins(H, min_step):
     - Uses 'insured' segments to recover sequences
     - Selects the widest valid MS segment
 
-    And returns the indexes and the distance in bins
+    And returns center line, left edge and right edge of the MAin Sequence in bins of the 2d histogram.
     """
 
     center_line = []
@@ -95,17 +95,23 @@ def get_max_width_bins(H, min_step):
             min_edge.append(0)
             max_edge.append(0)
             center_line.append(0)
-    return center_line, min_edge, max_edge
 
-def extract_main_sequence(center_line, min_edge, max_edge, bins_division, xmin, ymin):
-    """
-    Extract main sequence using the center line in the bin space and returns the values in magnitude.
-    The main sequence is defined as the longest contiguous segment of non-zero values in the center line.
-    """
-    
     center_line = np.array(center_line)
     min_edge = np.array(min_edge)
     max_edge = np.array(max_edge)
+
+    return center_line, min_edge, max_edge
+
+def extract_main_sequence(center_line: np.ndarray, 
+                          min_edge: np.ndarray, 
+                          max_edge: np.ndarray, 
+                          bins_division: int, 
+                          xmin: float, 
+                          ymin: float) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, int]:
+    """
+    Filters the Main Sequence bins using the center line and returns the values in magnitude.
+    The main sequence is defined as the longest contiguous segment of non-zero values in the center line.
+    """
 
     # --- Find zero positions ---
     zero_idx = np.where(center_line == 0)[0]
@@ -115,6 +121,8 @@ def extract_main_sequence(center_line, min_edge, max_edge, bins_division, xmin, 
         start = 0
         main_sequence = np.arange(len(center_line))
     else:
+
+
         # --- Find largest gap between zeros ---
         gaps = zero_idx[1:] - zero_idx[:-1] - 1
 
@@ -124,10 +132,12 @@ def extract_main_sequence(center_line, min_edge, max_edge, bins_division, xmin, 
 
         main_sequence = np.arange(start + 1, start + max_width)
 
+
     # --- Extract MS in bin space ---
     filtered_center = center_line[main_sequence]
     filtered_min = min_edge[main_sequence]
     filtered_max = max_edge[main_sequence]
+
 
     # --- Convert to magnitude space ---
     offset = 1 / (2 * bins_division)

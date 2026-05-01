@@ -3,7 +3,7 @@ import pandas as pd
 
 from .module import compute_angular_distance, build_row
 
-def run_crossmatch_pipeline(optical_data, xray_data):
+def run_crossmatch_pipeline(optical_data: pd.DataFrame, xray_data: pd.DataFrame) -> pd.DataFrame:
 
     """
     Identify optical counterparts for X-ray sources using positional crossmatching.
@@ -11,7 +11,8 @@ def run_crossmatch_pipeline(optical_data, xray_data):
     - First calculate the angular distance between each X-ray source and all optical sources.
     - Select optical sources within the 95% confidence radius (r95) of the X-ray source.
     - If no sources are found within r95, apply a fallback search using a fixed radius of 2 arcseconds.
-    - For each matched candidate, compile a row of data including positional information, photometric measurements, and a simple classification based on Mv and log_Lx.
+    - For each matched candidate, compile a row of data including positional information, photometric measurements, 
+    and a simple classification based on Mv and log_Lx.
     - If no candidates are found for an X-ray source, it is skipped.
     - The final output is a DataFrame containing all matched candidates with their associated data.
 
@@ -31,12 +32,13 @@ def run_crossmatch_pipeline(optical_data, xray_data):
 
     optical_df = optical_data.copy()
     xray_df = xray_data.copy()
-
+    
+    # Defining the names of the X-ray sources
     cx_list = xray_df.index.tolist()
 
     results = []
 
-    # Pre-extract arrays (faster)
+    # Pre-extract arrays 
     ra = optical_df["RA"].values
     dec = optical_df["Decl"].values
 
@@ -54,7 +56,7 @@ def run_crossmatch_pipeline(optical_data, xray_data):
 
         # --- FALLBACK: 2 arcsec ---
         radius = 2 / 3600  # Convert arcsec to degrees
-        if len(idx) == 0 and r95 < radius:
+        if len(idx) == 0 and r95 < radius: # type: ignore
             idx = np.where(dist < radius)[0]
             radius_flag = "2"
 

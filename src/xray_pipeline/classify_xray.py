@@ -1,6 +1,7 @@
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 from .module_xray import (
     load_xray_data,
@@ -11,7 +12,7 @@ from .module_xray import (
     finalize_xray
 )
 
-def x_ray_classification(path_xray, BS_RA, BS_Decl, distance_parsecs):
+def x_ray_classification(path_xray: str, BS_RA: float, BS_Decl: float, distance_parsecs: float) -> pd.DataFrame:
 
     """
     Perform X-ray source classification for a globular cluster.

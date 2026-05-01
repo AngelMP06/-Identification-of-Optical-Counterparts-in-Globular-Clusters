@@ -1,12 +1,22 @@
 import numpy as np
+import pandas as pd
+
 from scipy.interpolate import interp1d
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import DBSCAN
 
 from ..utils.colors import get_color_columns
+from src.models import Points
 
 
-def DBSCAN_classification(region3, graphic_comp, eps=0.4, min_samples=15):
+# ==================================
+# APLYING DBSCAN TO CLASSIFY THE RGB
+# ==================================
+
+def DBSCAN_classification(region3: pd.DataFrame, 
+                          CMD_config: int, 
+                          eps=0.5, 
+                          min_samples=15) -> tuple[pd.DataFrame, np.ndarray, np.ndarray, np.ndarray]:
 
     """
     Apply DBSCAN clustering in the CMD and label the bottom-left cluster as the RGB.
@@ -15,14 +25,14 @@ def DBSCAN_classification(region3, graphic_comp, eps=0.4, min_samples=15):
     region3 = region3.copy()
 
     # --- Colors ---
-    Color1, Color2 = get_color_columns(graphic_comp)
+    Color1, Color2 = get_color_columns(CMD_config)
 
     x_col = f"{Color1} - {Color2}"
     y_col = f"{Color2}_Mag"
-    pos_col = f"position_{graphic_comp}"
+    pos_col = f"position_{CMD_config}"
 
-    x = region3[x_col].values
-    y = region3[y_col].values
+    x = np.array(region3[x_col].values)
+    y = np.array(region3[y_col].values)
 
     # --- DBSCAN clustering ---
     X = np.column_stack((x, y))
@@ -32,7 +42,7 @@ def DBSCAN_classification(region3, graphic_comp, eps=0.4, min_samples=15):
     clusters = [l for l in set(labels) if l != -1]
 
     if len(clusters) == 0:
-        return region3, None, None, None
+        return region3, np.zeros(2), np.array([]), np.array([])
 
     # --- Select RGB cluster (bottom-right) ---
     if len(clusters) == 1:
@@ -61,13 +71,22 @@ def DBSCAN_classification(region3, graphic_comp, eps=0.4, min_samples=15):
     y_sel = y[mask_rgb]
 
     # --- Key point F ---
-    point_F = [x_sel.max(), y_sel.min()]
+    point_F = np.array([x_sel.max(), y_sel.min()])
 
     # --- Assign RGB ---
     region3.loc[mask_rgb & (region3[pos_col] == "Unknown"), pos_col] = "RGB"
+
     return region3, point_F, x_sel, y_sel
 
-def ridge_line_extraction(x_sel, y_sel, bins_division, msto_y, point_F):
+# =================================
+# GETTING THE RIDGE LINE OF THE RGB
+# =================================
+
+def ridge_line_extraction(x_sel: np.ndarray, 
+                          y_sel: np.ndarray, 
+                          bins_division: int, 
+                          msto_y: float, 
+                          point_F: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 
 
     """
@@ -89,6 +108,7 @@ def ridge_line_extraction(x_sel, y_sel, bins_division, msto_y, point_F):
     x_centers = 0.5 * (xedges[:-1] + xedges[1:])
     y_centers = 0.5 * (yedges[:-1] + yedges[1:])
 
+
     # --- Ridge extraction ---
     ridge_x = []
     ridge_y = []
@@ -105,31 +125,40 @@ def ridge_line_extraction(x_sel, y_sel, bins_division, msto_y, point_F):
     ridge_x = np.array(ridge_x)
     ridge_y = np.array(ridge_y)
 
+
     # --- Extend ridge ---
     ridge_x_full = np.concatenate(([xmin], ridge_x, [point_F[0]]))
     ridge_y_full = np.concatenate(([msto_y], ridge_y, [point_F[1]]))
 
     return ridge_x_full, ridge_y_full
     
-def SGB_RS_classification(region3, graphic_comp, ridge_x_full, ridge_y_full, point_F):
+# ==================================
+# CLASSIFYING THE RS, AND RSGB
+# ==================================
+
+def RSGB_RS_classification(region3: pd.DataFrame, 
+                          CMD_config: int, 
+                          ridge_x_full: np.ndarray, 
+                          ridge_y_full: np.ndarray, 
+                          point_F: np.ndarray) -> pd.DataFrame:
     
     """
     Classify the sources as Red Supergiant Branch (RSGB) if they are to the right of point F, 
-    and as Red Lagging if they are to the left of point F and below the ridge line.
+    and as Red Stragglers (RS) if they are to the left of point F and below the ridge line.
     """
 
     region3 = region3.copy()
 
     # --- Colors ---
-    Color1, Color2 = get_color_columns(graphic_comp)
+    Color1, Color2 = get_color_columns(CMD_config)
     y_col= f"{Color2}_Mag"
     x_col = f"{Color1} - {Color2}"
 
     x = region3[x_col].values
     y = region3[y_col].values
-    pos_col = f"position_{graphic_comp}"
-    
-    
+    pos_col = f"position_{CMD_config}"
+
+
     # --- Interpolation ---
     ridge_func = interp1d(
         ridge_x_full,
@@ -142,22 +171,35 @@ def SGB_RS_classification(region3, graphic_comp, ridge_x_full, ridge_y_full, poi
     # --- Vectorized classification ---
     y_ridge = ridge_func(x)
 
+
     # --- Classify Red Super Giant Branch (RSGB) sourecs as the ones at the right of the point F ---
     mask_super = x > point_F[0] 
+
 
     # --- Classify the sources below the ridge line as Red Stragglers (RS) (Remember that the y axis is inverted)---
     mask_straggler = (x <= point_F[0]) & (y > y_ridge)
 
+
     # Apply only where still Unknown
     unknown_mask = region3[pos_col] == "Unknown"
 
-    region3.loc[unknown_mask & mask_super, pos_col] = "Red Super Giant Branch"
-    region3.loc[unknown_mask & mask_straggler, pos_col] = "Red Straggler"
-
+    region3.loc[unknown_mask & mask_super, pos_col] = "RSGB"
+    region3.loc[unknown_mask & mask_straggler, pos_col] = "RS"
 
     return region3
 
-def RGB_classification(region3, graphic_comp, bins_division, msto_y, eps=0.4, min_samples=15):
+# ====================================
+# MAIN FUNCTION FOR RGB CLASSIFICATION
+# ====================================
+
+
+def RGB_classification(region3: pd.DataFrame, 
+                       CMD_config: int, 
+                       bins_division: int, 
+                       msto_y: float, 
+                       points: Points, 
+                       eps=0.4, 
+                       min_samples=15) -> tuple[pd.DataFrame, Points]:
     """
     Analize sources of region 3 of the CMD to identify the Red Giant Branch (RGB), Red Stragglers (RS), and Red Super Giant Branch (RSGB).
 
@@ -171,16 +213,15 @@ def RGB_classification(region3, graphic_comp, bins_division, msto_y, eps=0.4, mi
     region3 = region3.copy()
 
     # --- Step 1: DBSCAN classification ---
-    region3, point_F, x_sel, y_sel = DBSCAN_classification(region3, graphic_comp, eps, min_samples)
-
-    if point_F is None:
-        return region3, None
+    region3, point_F, x_sel, y_sel = DBSCAN_classification(region3, CMD_config, eps, min_samples)
     
+    points.point_F = point_F
+
     # --- Step 2: Ridge line extraction ---
     ridge_x_full, ridge_y_full = ridge_line_extraction(x_sel, y_sel, bins_division, msto_y, point_F)
 
     # --- Step 3: SGB and RS classification ---
-    region3 = SGB_RS_classification(region3, graphic_comp, ridge_x_full, ridge_y_full, point_F)
+    region3 = RSGB_RS_classification(region3, CMD_config, ridge_x_full, ridge_y_full, point_F)
 
-    return region3, point_F
+    return region3, points
 

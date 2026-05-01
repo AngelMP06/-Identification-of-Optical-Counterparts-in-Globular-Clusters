@@ -1,16 +1,9 @@
 import numpy as np
 import pandas as pd
 
-def filter_data(
-    df: pd.DataFrame,
-    Mag_min: float,
-    Mag_max: float,
-    RMS_max: float,
-    Fit_max: float,
-    Sharp_min: float,
-    Sharp_max: float,
-    CM_min: float
-) -> pd.DataFrame:
+from models import FilterParams
+
+def filter_data(df: pd.DataFrame, filter_params: FilterParams) -> pd.DataFrame:
     """
     Filter and preprocess optical catalog data.
 
@@ -18,7 +11,6 @@ def filter_data(
     - Computes visible magnitude and absolute magnitude (Mv)
     - Applies quality filters across all photometric bands
     - Removes unnecessary columns
-    - Computes color indices for CMD analysis
 
     Parameters
     ----------
@@ -26,16 +18,8 @@ def filter_data(
         Raw optical catalog data.
     distance_parsecs : float
         Distance to the cluster in parsecs.
-    Mag_min, Mag_max : float
-        Allowed magnitude range.
-    RMS_max : float
-        Maximum RMS allowed for photometry.
-    Fit_max : float
-        Maximum fit value allowed.
-    Sharp_min, Sharp_max : float
-        Allowed sharpness range.
-    CM_min : float
-        Minimum cluster membership probability.
+    filter_params : FilterParams
+        Filtering parameters.
 
     Returns
     -------
@@ -46,22 +30,24 @@ def filter_data(
     # --- Work on a copy (avoid modifying original data) ---
     df = df.copy()
 
+
     # --- Apply filtering conditions ---
     bands = ["275", "336", "438", "606", "814"]
 
     mask = np.ones(len(df), dtype=bool)
 
     for band in bands:
-        mask &= df[f"{band}_Mag"].between(Mag_min, Mag_max)
-        mask &= df[f"{band}_RMS"] < RMS_max
-        mask &= df[f"{band}_Fit"] < Fit_max
-        mask &= df[f"{band}_Sharp"].between(Sharp_min, Sharp_max)
+        mask &= df[f"{band}_Mag"].between(filter_params.Mag_min, filter_params.Mag_max)
+        mask &= df[f"{band}_RMS"] < filter_params.RMS_max
+        mask &= df[f"{band}_Fit"] < filter_params.Fit_max
+        mask &= df[f"{band}_Sharp"].between(filter_params.Sharp_min, filter_params.Sharp_max)
 
     # Apply cluster membership filter ONCE
-    mask &= df["Cluster_Membership"] > CM_min
+    mask &= df["Cluster_Membership"] > filter_params.CM_min
 
     df_filtered = df[mask].copy()
     df_filtered.reset_index(drop=True, inplace=True)
+
 
     # --- Drop unnecessary columns ---
     columns_to_drop = []
@@ -76,6 +62,7 @@ def filter_data(
         ])
 
     df_filtered.drop(columns=columns_to_drop, inplace=True)
+
 
     # --- Create color indices (CMD features) ---
     df_filtered["275 - 336"] = df_filtered["275_Mag"] - df_filtered["336_Mag"]

@@ -1,14 +1,15 @@
 import numpy as np
+import pandas as pd
 from ..utils.colors import get_color_columns
 
 
-def compute_histogram(df, bins_division, graphic_comp):
+def compute_histogram(df: pd.DataFrame, bins_division: int, CMD_config: int) -> tuple[np.ndarray, float, float]:
 
     """
-    Computing the 2D histogram for the given DataFrame and graphic components.
+    Computing the 2D histogram for the given DataFrame and CMD configuration.
     """
     
-    Color1, Color2 = get_color_columns(graphic_comp)
+    Color1, Color2 = get_color_columns(CMD_config)
 
     x = df[f"{Color1} - {Color2}"]
     y = df[f"{Color2}_Mag"]

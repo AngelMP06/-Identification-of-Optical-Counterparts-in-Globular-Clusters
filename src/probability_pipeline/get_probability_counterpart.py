@@ -1,8 +1,10 @@
+import pandas as pd
+
 from .scores import initialize_scores, apply_hardness_score, apply_mv_xray_score, apply_optical_score
 from .probabilities import compute_base_probability, apply_weighting, normalize_probabilities, apply_radius_penalty, rescale_classes
 from .final_output import finalize_output
 
-def run_probability_pipeline(df_matches):
+def run_probability_pipeline(df_matches: pd.DataFrame) -> pd.DataFrame:
 
     """
     Compute the probability that each optical source is the true counterpart

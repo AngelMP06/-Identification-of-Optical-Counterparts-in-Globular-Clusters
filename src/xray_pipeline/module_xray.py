@@ -186,6 +186,11 @@ def classify_sources(df: pd.DataFrame) -> pd.DataFrame:
     """
     Classify X-ray sources based on luminosity and hardness ratio.
 
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Input catalog with log_Lx and log_HR columns.
+
     Returns
     -------
     pd.DataFrame
@@ -214,6 +219,11 @@ def classify_sources(df: pd.DataFrame) -> pd.DataFrame:
 def finalize_xray(df: pd.DataFrame) -> pd.DataFrame:
     """
     Remove intermediate columns and prepare final catalog.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Input catalog with all computed columns.
 
     Returns
     -------
