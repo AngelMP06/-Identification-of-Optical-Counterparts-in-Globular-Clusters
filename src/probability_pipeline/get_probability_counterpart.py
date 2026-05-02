@@ -63,6 +63,6 @@ def run_probability_pipeline(df_matches: pd.DataFrame, show_probability_plots: b
         print("####################################################")
         print("\n")
         print(df_final)
-    filter = df_final["P_counterpart (%)"] >= 80
+    filter = df_final["P_counterpart (%)"] >= 75
 
     return df_final.loc[filter]

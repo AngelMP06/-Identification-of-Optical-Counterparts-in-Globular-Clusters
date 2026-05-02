@@ -96,13 +96,27 @@ def parse_coordinates(df: pd.DataFrame, BS_RA: float, BS_Decl: float) -> pd.Data
     """
     df = df.copy()
 
-    # RA conversion
-    ra_parts = df["RA"].str.extract(r"(\d+)h(\d+)m([\d\.]+)s").astype(float)
-    df["RA"] = 15 * (ra_parts[0] + ra_parts[1] / 60 + ra_parts[2] / 3600) + BS_RA
+    # --- RA conversion (HH:MM:SS → degrees) ---
+    ra_parts = df["RA"].str.split(":", expand=True).astype(float)
 
-    # Decl conversion
-    decl_parts = df["Decl"].str.extract(r"([+-]?\d+)d(\d+)m([\d\.]+)s").astype(float)
-    df["Decl"] = decl_parts[0] - decl_parts[1] / 60 - decl_parts[2] / 3600 + BS_Decl
+    df["RA"] = 15 * (
+        ra_parts[0] + 
+        ra_parts[1] / 60 + 
+        ra_parts[2] / 3600
+    ) + BS_RA
+
+
+    # --- Decl conversion (DD:MM:SS → degrees) ---
+    dec_parts = df["Decl"].str.split(":", expand=True).astype(float)
+
+    # Extract sign (+1 or -1)
+    sign = np.sign(dec_parts[0])
+
+    df["Decl"] = sign * (
+        np.abs(dec_parts[0]) + 
+        dec_parts[1] / 60 + 
+        dec_parts[2] / 3600
+    ) + BS_Decl
 
     return df
 

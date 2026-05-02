@@ -24,14 +24,14 @@ def run_full_pipeline(cluster_name: str,
 
     probabilities_candidates = run_probability_pipeline(df_matches, show_probability_plots)
     
-    
+
     print("\n")
     print("####################################################")
     print("Final probabilities for candidate counterparts:")
     print("####################################################")
     
     print("")
-    print("A source is likely to be a counterpart if it has more than 80% on P_counterpart (%)")
+    print("A source is likely to be a counterpart if it has more or equal than 75% on P_counterpart (%)")
     
     if probabilities_candidates.empty:
         print("")

@@ -28,6 +28,8 @@ def optical_classification(path_optical : str,
     The classification is performed across multiple CMD configurations
     (CMD_config), allowing a more robust identification of stellar populations.
 
+    Filter and MSDecetion Parameters can be adjusted to optimize the classification for different clusters or datasets.
+
     Parameters
     ----------
     path_optical : str
