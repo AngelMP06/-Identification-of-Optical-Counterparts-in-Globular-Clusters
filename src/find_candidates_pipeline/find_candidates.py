@@ -3,7 +3,10 @@ import pandas as pd
 
 from .module import compute_angular_distance, build_row
 
-def run_crossmatch_pipeline(optical_data: pd.DataFrame, xray_data: pd.DataFrame, show_crossmatch_DaraFrame: bool = False) -> pd.DataFrame:
+def run_crossmatch_pipeline(optical_data: pd.DataFrame, 
+                            xray_data: pd.DataFrame, 
+                            show_crossmatch_DaraFrame: bool = False, 
+                            search_secure_counterparts: bool = False) -> pd.DataFrame:
 
     """
     Identify optical counterparts for X-ray sources using positional crossmatching.
@@ -24,7 +27,8 @@ def run_crossmatch_pipeline(optical_data: pd.DataFrame, xray_data: pd.DataFrame,
         X-ray catalog including positions, uncertainties, and classifications.
     show_crossmatch_DaraFrame : bool, optional
         Whether to display the DataFrame of matched candidates (by default False)
-
+    search_secure_counterparts : bool, optional
+        If True, the pipeline will search directly within 2 arc seconds (default is False).
     Returns
     -------
     pd.DataFrame
@@ -52,13 +56,23 @@ def run_crossmatch_pipeline(optical_data: pd.DataFrame, xray_data: pd.DataFrame,
 
         dist = compute_angular_distance(ra, dec, ra0, dec0)
 
-        # --- FIRST SEARCH: Sources inside r95 degrees ---
-        idx = np.where(dist < r95)[0]
-        radius_flag = "r95"
+        
+        if not search_secure_counterparts:
 
-        # --- FALLBACK: 2 arcsec ---
-        radius = 2 / 3600  # Convert arcsec to degrees
-        if len(idx) == 0 and r95 < radius: # type: ignore
+            # --- FIRST SEARCH: Sources inside r95 degrees ---
+            idx = np.where(dist < r95)[0]
+            radius_flag = "r95"
+
+
+            # --- FALLBACK: 2 arcsec ---
+            radius = 2 / 3600  # Convert arcsec to degrees
+            if len(idx) == 0 and r95 < radius: # type: ignore
+                idx = np.where(dist < radius)[0]
+                radius_flag = "2"
+        else:
+
+            # --- FALLBACK: 2 arcsec ---
+            radius = 2 / 3600  # Convert arcsec to degrees
             idx = np.where(dist < radius)[0]
             radius_flag = "2"
 

@@ -205,7 +205,7 @@ You need one reliable match between optical and X-ray data:
  
  **From your data:**
   - Run the pipeline with a larger search radius (2 arcsec)
-  - Identify candidates with probability > 80%
+  - Identify candidates with probability > 75%
   - Use one as a secure counterpart
   - Once obtained, apply the boresight correction to all X-ray sources.
 ---

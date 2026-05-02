@@ -13,7 +13,7 @@ def initialize_scores(df):
     df["LMXRB"] = 0.0
     return df
 
-def apply_hardness_score(df, HC_score = 0.25):
+def apply_hardness_score(df, HC_score = 0.15):
 
     """
     Assign scores based on X-ray hardness classification.
@@ -41,7 +41,7 @@ def apply_hardness_score(df, HC_score = 0.25):
 
     return df
 
-def apply_mv_xray_score(df, MV_XR_score = 0.25):
+def apply_mv_xray_score(df, MV_XR_score = 0.15):
 
     """
     Assign scores based on the Mv-Lx (optical magnitude vs X-ray luminosity) relation.
@@ -65,7 +65,7 @@ def apply_mv_xray_score(df, MV_XR_score = 0.25):
 
     return df
 
-def apply_optical_score(df, optical_score = 0.5):
+def apply_optical_score(df, optical_score = 0.7):
 
     """
     This function evaluates the location of each source relative to the Main

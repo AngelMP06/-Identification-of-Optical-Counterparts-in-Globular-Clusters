@@ -4,7 +4,7 @@ from .scores import initialize_scores, apply_hardness_score, apply_mv_xray_score
 from .probabilities import compute_base_probability, apply_weighting, normalize_probabilities, apply_radius_penalty, rescale_classes
 from .final_output import finalize_output
 
-def run_probability_pipeline(df_matches: pd.DataFrame, show_probability_plots: bool = False) -> pd.DataFrame:
+def run_probability_pipeline(df_matches: pd.DataFrame, show_probability_plots: bool = False, search_secure_counterparts: bool = False) -> pd.DataFrame:
 
     """
     Compute the probability that each optical source is the true counterpart
@@ -29,6 +29,8 @@ def run_probability_pipeline(df_matches: pd.DataFrame, show_probability_plots: b
         DataFrame containing matched optical-X_ray candidates.
     show_probability_plots : bool, optional
         Whether to display the results of the probability pipeline, by default False
+    search_secure_counterparts : bool, optional
+        If True, the pipeline will not apply radius penalties (default is False).
     Returns
     -------
     pd.DataFrame
@@ -48,7 +50,8 @@ def run_probability_pipeline(df_matches: pd.DataFrame, show_probability_plots: b
     df, total_prob = compute_base_probability(df)
     df = apply_weighting(df)
     df = normalize_probabilities(df, total_prob)
-    df = apply_radius_penalty(df)
+    if not search_secure_counterparts:
+        df = apply_radius_penalty(df)
     df = rescale_classes(df)
 
     # --- FINAL ---
