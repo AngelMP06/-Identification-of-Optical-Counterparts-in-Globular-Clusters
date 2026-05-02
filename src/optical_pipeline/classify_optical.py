@@ -94,7 +94,7 @@ def optical_classification(path_optical : str,
             Color1, Color2 = get_color_columns(CMD_config)
             
             # --- Define output directory ---
-            output_dir = os.path.join("results", cluster_name, "Optical_plots")
+            output_dir = os.path.join("results", cluster_name, "optical_plots")
 
             # Create directory if it doesn't exist
             os.makedirs(output_dir, exist_ok=True)

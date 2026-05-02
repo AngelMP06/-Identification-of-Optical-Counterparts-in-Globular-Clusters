@@ -28,22 +28,38 @@ Since this analysis is repetitive across different clusters, this project automa
 
 ## 3) Installation
 
+### 3.1) Requirements
+- Python 3.10 or 3.11 (recommended: 3.11)
 
-### Requirements
-- Python 3.9+ (recommended: 3.10)
-
-### Clone the repository
+### 3.2) Clone the repository
 
 ```bash
 git clone <your-repo-url>
 cd <your-repo-folder>
 ```
-###  Dependencies
+### 3.3) Create a virtual enviroment
+```bash
+py -3.11 -m venv test_env
+```
 
+### 3.4) Activate environment (Windows)
+```bash
+test_env\Scripts\activate
+```
+### 3.5) Install dependencies
+```bash
+pip install -r requirements.txt```
+
+###  3.6) Dependencies
 * pandas
 * numpy
 * matplotlib
 * seaborn
+* scikit-learn
+* scipy
+
+> Note: On Windows, avoid using paths with special characters (e.g., accents) when installing dependencies.
+
 ---
 
 ## 4) Usage
@@ -56,10 +72,10 @@ python -m src.main
 You can also change the parametrs of the **run_full_pipeline** function:
 ```bash
 run_full_pipeline("NGC_6809", 
-							show_optical_plots=False, 
-							show_xray_plot=False, 
-							show_crossmatch_DaraFrame=False, 
-							show_probability_plots=False,
+							show_optical_plots=True, 
+							show_xray_plot=True, 
+							show_crossmatch_DaraFrame=True, 
+							show_probability_plots=True,
               search_secure_counterparts = False)
 ```
 You can:
@@ -80,32 +96,39 @@ The project is organized as follows:
 
 ```
 project/
-│── src/
-│ ├── optical_pipeline/
-│ ├── xray_pipeline/
-│ ├── find_candidates_pipeline/
-│ ├── probability_pipeline/
-│ ├── full_pipeline.py
-│ ├── load_cluster_data.py
-│ ├── main.py
-│ └── models.py
 │
-│── notebooks/
-│ ├── 1_classify_optical.ipynb
-│ ├── 2_classify_xray.ipynb
-│ ├── 3_find_counterpart_candidates.ipynb
-│ └── 4_candidate_probability.ipynb
+├── src/
+│   ├── optical_pipeline/
+│   ├── xray_pipeline/
+│   ├── find_candidates_pipeline/
+│   ├── probability_pipeline/
+│   ├── full_pipeline.py
+│   ├── load_cluster_data.py
+│   ├── main.py
+│   └── models.py
 │
-│── data/
-│ └── NGC_6809/
-│	 ├── config.json
-│ 	├── optical_sources.txt
-│ 	└── xray_sources.txt
+├── notebooks/
+│   ├── 1_classify_optical.ipynb
+│   ├── 2_classify_xray.ipynb
+│   ├── 3_find_counterpart_candidates.ipynb
+│   └── 4_candidate_probability.ipynb
 │
-│── results/
-│└── NGC_6809/
-│	 ├── Optical_plots/
-│	 └── Xray plot/
+├── data/
+│   ├── NGC_6809/
+│   │   ├── config.json
+│   │   ├── optical_sources.txt
+│   │   └── xray_sources.txt
+│   └── images/
+│
+├── results/
+│   └── NGC_6809/
+│       ├── optical_plots/
+│       └── xray_plots/
+│
+├── .gitignore
+├── requirements.txt
+├── README.md
+├── LICENSE
 ```
 
 ---
@@ -162,7 +185,7 @@ X-ray sources are typically found in regions offset from the Main Sequence (redd
 - Blue Stragglers  
 - Giant Branch  
 
-![](data/Images/CMD.jpeg)
+![](data/images/CMD.jpeg)
 
 ---
 
@@ -178,7 +201,7 @@ Some sources (e.g., background galaxies or AGNs) are not identified by the pipel
 
 They can be detected by visualizing `.fits` images (e.g., using SAOImage DS9) and inspecting X-ray confidence regions.
 
-![](data/Images/Galaxy_in_a_cluster.jpeg)
+![](data/images/Galaxy_in_a_cluster.jpeg)
 
 ---
 
@@ -203,8 +226,8 @@ You need one reliable match between optical and X-ray data:
 - **From literature (recommended):**
   - Use published counterparts with high confidence.
   - Find the secure optical source in your optical Data (Using visualization software like SaoDS9)
-  - Obtain the right ascension (RA) and declination (Decl) of that optical source to calculate the boresight.
- 
+  - Obtain the right ascension (RA) and declination (Decl) from the HUGS data of that optical source to calculate the boresight.
+
  **From your data:**
   - Run the pipeline with a larger search radius (2 arcsec), this can be done by changing the parameter **search_secure_counterpart** to True.
   - Identify candidates with probability > 75%.

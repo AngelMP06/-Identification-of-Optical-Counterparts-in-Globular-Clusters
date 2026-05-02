@@ -84,11 +84,6 @@ def apply_optical_score(df, optical_score = 0.7):
     Sources redder than the Main Sequence are more likely AB.
     A stronger boost is applied if AB is already the dominant class;
     otherwise, a smaller contribution is assigned.
-
-    3) Main Sequence:   
-    Sources on the MS or MSTO slightly favor AB classification,
-    but only if AB is already the most probable class, to avoid
-    artificially inflating ambiguous cases.
     """
 
     for i, row in df.iterrows():

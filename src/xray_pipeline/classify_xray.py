@@ -52,7 +52,7 @@ def x_ray_classification(path_xray: str, BS_RA: float, BS_Decl: float, distance_
 
     if show_plot:
         # --- Define output directory ---
-        output_dir = os.path.join("results", cluster_name, "X_ray plot")
+        output_dir = os.path.join("results", cluster_name, "xray_plot")
 
         # Create directory if it doesn't exist
         os.makedirs(output_dir, exist_ok=True)
