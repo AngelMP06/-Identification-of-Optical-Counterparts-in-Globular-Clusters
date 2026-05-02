@@ -15,10 +15,13 @@ __pycache__/
 # 🔹 Jupyter Notebook
 # =========================
 .ipynb_checkpoints/
-
+*.ipynb.layout
 
 # =========================
 # 🔹 Data (optional)
 # =========================
 data/raw/*
 !data/raw/sample_data.csv
+
+
+
