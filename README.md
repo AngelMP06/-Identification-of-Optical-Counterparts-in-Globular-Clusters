@@ -59,7 +59,8 @@ run_full_pipeline("NGC_6809",
 							show_optical_plots=False, 
 							show_xray_plot=False, 
 							show_crossmatch_DaraFrame=False, 
-							show_probability_plots=False)
+							show_probability_plots=False,
+              search_secure_counterparts = False)
 ```
 You can:
 
@@ -67,8 +68,9 @@ You can:
 - Enable/disable:
 - Optical classification plots
 - X-ray classification plots
-- Cross-match DataFrame (possible counterparts)
-- Probability plots
+- Show Cross-match DataFrame (possible counterparts)
+- Show Probabilities for every counterpart
+- Search on a big radius to find secure counterparts
 
 The generated images will be stored inside `data/`
 
@@ -204,9 +206,9 @@ You need one reliable match between optical and X-ray data:
   - Obtain the right ascension (RA) and declination (Decl) of that optical source to calculate the boresight.
  
  **From your data:**
-  - Run the pipeline with a larger search radius (2 arcsec)
-  - Identify candidates with probability > 75%
-  - Use one as a secure counterpart
+  - Run the pipeline with a larger search radius (2 arcsec), this can be done by changing the parameter **search_secure_counterpart** to True.
+  - Identify candidates with probability > 75%.
+  - Use one as a secure counterpart.
   - Once obtained, apply the boresight correction to all X-ray sources.
 ---
 ## 9) Future Work

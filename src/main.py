@@ -6,5 +6,5 @@ if __name__ == "__main__":
                       show_optical_plots=False, 
                       show_xray_plot=False, 
                       show_crossmatch_DaraFrame=False, 
-                      show_probability_plots=True, 
-                      search_secure_counterparts=True)
+                      show_probability_plots=False, 
+                      search_secure_counterparts=False)
