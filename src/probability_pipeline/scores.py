@@ -85,7 +85,7 @@ def apply_optical_score(df, optical_score = 0.7):
     A stronger boost is applied if AB is already the dominant class;
     otherwise, a smaller contribution is assigned.
 
-    3) Main Sequence:
+    3) Main Sequence:   
     Sources on the MS or MSTO slightly favor AB classification,
     but only if AB is already the most probable class, to avoid
     artificially inflating ambiguous cases.
@@ -93,18 +93,18 @@ def apply_optical_score(df, optical_score = 0.7):
 
     for i, row in df.iterrows():
 
-        for graphic_comp in range(3):
+        for CMD_config in range(3):
 
-            pos = row[f"pos_{graphic_comp}"]
+            pos = row[f"pos_{CMD_config}"]
 
             # --- BLUE SIDE ---
-            if pos == "bluer than MS L1":
+            if pos in ["bluer than MS L1", "bluer than SGB L1", "bluer than MSTO L1"]:
 
                 if row["LMXRB"] > row["CV"] and row["LMXRB"] > row["AB"]:
-                    df.loc[i, "LMXRB"] += (optical_score - (optical_score/6)*(graphic_comp-1)) / 3
+                    df.loc[i, "LMXRB"] += (optical_score - (optical_score/6)*(CMD_config-1)) / 3
 
                 elif row["CV"] > row["AB"]:
-                    df.loc[i, "CV"] += (optical_score - (optical_score/6)*(graphic_comp-1)) / 3
+                    df.loc[i, "CV"] += (optical_score - (optical_score/6)*(CMD_config-1)) / 3
 
                 else:
                     df.loc[i, "LMXRB"] += optical_score / 6
@@ -114,14 +114,8 @@ def apply_optical_score(df, optical_score = 0.7):
             elif pos in ["redder than MS L1", "sub-sub-giant branch", "Red giant branch"]:
 
                 if row["AB"] > row["CV"] and row["AB"] > row["LMXRB"]:
-                    df.loc[i, "AB"] += (optical_score + (optical_score/6)*(graphic_comp-1)) / 3
+                    df.loc[i, "AB"] += (optical_score + (optical_score/6)*(CMD_config-1)) / 3
                 else:
-                    df.loc[i, "AB"] += (optical_score + (optical_score/6)*(graphic_comp-1)) / 5
-
-            # --- MAIN SEQUENCE ---
-            elif pos in ["MS", "MSTO"]:
-
-                if row["AB"] > row["CV"] and row["AB"] > row["LMXRB"]:
-                    df.loc[i, "AB"] += optical_score / 6
+                    df.loc[i, "AB"] += (optical_score + (optical_score/6)*(CMD_config-1)) / 6
 
     return df
