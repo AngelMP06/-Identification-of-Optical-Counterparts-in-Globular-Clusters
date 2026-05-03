@@ -1,6 +1,6 @@
 # Identification of Optical Counterparts in Globular Clusters
 
-A pipeline combining optical CMD analysis and X-ray properties to identify likely counterparts of X-ray sources in globular clusters.
+A Python pipeline for identifying optical counterparts of X-ray sources in globular clusters using Color–Magnitude Diagram (CMD) analysis, X-ray classification, and probabilistic cross-matching.
 
 ---
 
@@ -13,7 +13,7 @@ The pipeline consists of the following main stages:
 * Optical data preprocessing and filtering
 * X-ray source analysis
 * Cross-matching between optical and X-ray catalogs
-* Finding most probables counterparts for x-ray sources
+* Finding most probable counterparts for x-ray sources
 
 ---
 
@@ -37,7 +37,7 @@ Since this analysis is repetitive across different clusters, this project automa
 git clone <your-repo-url>
 cd <your-repo-folder>
 ```
-### 3.3) Create a virtual enviroment
+### 3.3) Create a virtual environment
 ```bash
 py -3.11 -m venv test_env
 ```
@@ -69,7 +69,7 @@ Run the full pipeline:
 ```bash
 python -m src.main
 ```
-You can also change the parametrs of the **run_full_pipeline** function:
+You can also change the parameters of the **run_full_pipeline** function:
 ```bash
 run_full_pipeline("NGC_6809", 
 							show_optical_plots=True, 
@@ -88,7 +88,7 @@ You can:
 - Show Probabilities for every counterpart
 - Search on a big radius to find secure counterparts
 
-The generated images will be stored inside `data/`
+The generated images will be stored inside `results/{cluster_name}/`
 
 ---
 ## 5) Project Structure
@@ -246,21 +246,26 @@ After running the pipeline, the results are saved in the `results/{cluster_name}
   - Located in `results/{cluster_name}/optical_plots/`
   - Show stellar populations and highlight possible optical counterparts
   - Sources are labeled and colored according to their CMD region
+
 <p align="center">
   <img src="results/NGC_6809/optical_plots/CMD_275_336_classification.png" width="30%">
   <img src="results/NGC_6809/optical_plots/CMD_438_606_classification.png" width="30%">
   <img src="results/NGC_6809/optical_plots/CMD_606_814_classification.png" width="30%">
 </p>
+
 - **X-ray classification plots**
   - Located in `results/{cluster_name}/xray_plots/`
   - Display the classification of X-ray sources based on their properties
+
 <p align="center">
   <img src="results/NGC_6809/xray_plot/Xray_classification.png" width="50%">
 </p>
+
 - **Candidate counterparts**
   - Located in `results/{cluster_name}/candidates/`
   - Show CMD with all candidates to be an optical counterpart.
   - Each candidate is colored according to its CMD region and labeled with its ID.
+
 <p align="center">
   <img src="results/NGC_6809/candidates/CMD_275_336_counterparts.png" width="30%">
   <img src="results/NGC_6809/candidates/CMD_438_606_counterparts.png" width="30%">
@@ -268,7 +273,15 @@ After running the pipeline, the results are saved in the `results/{cluster_name}
 </p>
 
 ---
-## 9) Future Work
+## 9) Key Results
+
+- Identified candidate optical counterparts for X-ray sources in NGC 6809
+- Classified sources based on CMD regions and X-ray properties
+- Generated reproducible visual and tabular outputs for further analysis
+
+## 10) Future Work
+
+
 
 - Improve CMD classification to handle irregular or non-standard cluster distributions.
 - Integrate machine learning models for automated classification.
@@ -276,7 +289,9 @@ After running the pipeline, the results are saved in the `results/{cluster_name}
 - Make data input more flexible (reduce strict formatting requirements).
 - Incorporate additional criteria such as Hα emission and source morphology.
 
-## 10) Next Milestone
+---
+
+## 11) Next Milestone
 
 Develop an automated classification module using machine learning to identify X-ray source types from optical and X-ray features.
 
@@ -286,24 +301,20 @@ Develop an automated classification module using machine learning to identify X-
 - Integrate the model into the existing pipeline  
 - Compare performance against current rule-based classification --
 
-## 11) Author
+## 12) Author
 
 **Angel Montes Palma**  
 *Bachelor of Science in Physics*
 
 ---
 
-## 12) Project Notes
+## 13) Project Notes
 
 > **Core Objective:** This project is intended for **scientific and educational purposes**, specifically tailored for:
 > *   **Astrophysical Data Analysis:** Processing raw astronomical observations.
 > *   **Source Classification:** Implementing robust workflows for object identification.
 
-## 13) References
-
-This project is based on methods and data from the following works:
-
-## 📚 References
+## 14) References
 
 This project is based on methods and data from the following works:
 
