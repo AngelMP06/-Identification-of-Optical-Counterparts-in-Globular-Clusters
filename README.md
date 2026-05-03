@@ -159,7 +159,7 @@ Store the data as a dictionary in a `.txt` file (recommended: `xray_sources.txt`
 Create a `config.json` file:
 ```bash
 {
-"BS_RA": -0.0000271, 							# Boresight of the RA
+  "BS_RA": -0.0000271, 							# Boresight of the RA
   "BS_Decl": -0.0000481,						# Boresight of the Decl
   "distance_parsecs": 5400,					   # Distance of the cluster
   "xray_file": "xray_sources.txt",				# Name of the file of Xray sources
