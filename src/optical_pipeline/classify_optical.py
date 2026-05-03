@@ -147,7 +147,7 @@ def optical_classification(path_optical : str,
             plt.xlabel(f"{Color1} - {Color2}")
             plt.ylabel(f"{Color2}_Mag")
 
-            # 5. Save logic: check if it exists before saving
+            # Save logic: check if it exists before saving
             if not os.path.exists(full_path):
                 plt.savefig(full_path, dpi=300, bbox_inches='tight')
                 print(f"New plot saved: {full_path}")

@@ -21,11 +21,10 @@ def run_full_pipeline(cluster_name: str,
 
     df_xray = x_ray_classification(params["path_xray"], params["BS_RA"], params["BS_Decl"], params["distance_parsecs"], cluster_name, show_xray_plot)
 
-    df_matches = run_crossmatch_pipeline(df_optical, df_xray, show_crossmatch_DaraFrame, search_secure_counterparts)
+    df_matches = run_crossmatch_pipeline(df_optical, df_xray, cluster_name, show_crossmatch_DaraFrame, search_secure_counterparts)
 
     probabilities_candidates = run_probability_pipeline(df_matches, show_probability_DataFrame)
     
-
     print("\n")
     print("####################################################")
     print("Final probabilities for candidate counterparts:")

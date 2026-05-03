@@ -40,13 +40,19 @@ def build_row(CX, num, i_opt, optical_df, xray_df, radius_flag, n_sources):
     classification = classify_optical_xray(Mv, log_Lx)
 
     return {
-        "id_candidate": f"{CX}_{num+1}",
+        "id_candidate": f"{CX}{chr(97 + num)}",
         "Xray source": CX,
         "opt_id": optical_df.loc[i_opt, "Id"],
         "Hardness_classification": xray_df.loc[CX, "class"],
         "Mv vs xray": classification,
 
         # Photometry
+        "275 - 336": optical_df.loc[i_opt, "275 - 336"],
+        "336_Mag": optical_df.loc[i_opt, "336_Mag"],
+        "438 - 606": optical_df.loc[i_opt, "438 - 606"],
+        "606_Mag": optical_df.loc[i_opt, "606_Mag"],
+        "606 - 814": optical_df.loc[i_opt, "606 - 814"],
+        "814_Mag": optical_df.loc[i_opt, "814_Mag"],
         "pos_0": optical_df.loc[i_opt, "position_0"],
         "pos_1": optical_df.loc[i_opt, "position_1"],
         "pos_2": optical_df.loc[i_opt, "position_2"],
