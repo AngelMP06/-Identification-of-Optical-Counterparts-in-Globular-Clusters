@@ -201,8 +201,10 @@ Some sources (e.g., background galaxies or AGNs) are not identified by the pipel
 
 They can be detected by visualizing `.fits` images (e.g., using SAOImage DS9) and inspecting X-ray confidence regions.
 
-![](data/images/Galaxy_in_a_cluster.jpeg)
-
+<p align="center">
+  <img src="data/images/Galaxy_in_a_cluster.jpeg" width="500"><br>
+  <em>Galaxy inside a globular cluster field (example of non-cluster X-ray source)</em>
+</p>
 ---
 
 ### 7.4) Boresight Correction
@@ -226,13 +228,45 @@ You need one reliable match between optical and X-ray data:
 - **From literature (recommended):**
   - Use published counterparts with high confidence.
   - Find the secure optical source in your optical Data (Using visualization software like SaoDS9)
-  - Obtain the right ascension (RA) and declination (Decl) from the HUGS data of that optical source to calculate the boresight.
-
+  - Obtain the right ascension (RA) and declination (Decl) of that optical source to calculate the boresight.
+ 
  **From your data:**
   - Run the pipeline with a larger search radius (2 arcsec), this can be done by changing the parameter **search_secure_counterpart** to True.
   - Identify candidates with probability > 75%.
   - Use one as a secure counterpart.
   - Once obtained, apply the boresight correction to all X-ray sources.
+---
+## 8)  Output
+
+After running the pipeline, the results are saved in the `results/{cluster_name}/` directory.
+
+### Generated Outputs
+
+- **Optical CMD plots**
+  - Located in `results/{cluster_name}/optical_plots/`
+  - Show stellar populations and highlight possible optical counterparts
+  - Sources are labeled and colored according to their CMD region
+<p align="center">
+  <img src="results/NGC_6809/optical_plots/CMD_275_336_classification.png" width="30%">
+  <img src="results/NGC_6809/optical_plots/CMD_438_606_classification.png" width="30%">
+  <img src="results/NGC_6809/optical_plots/CMD_606_814_classification.png" width="30%">
+</p>
+- **X-ray classification plots**
+  - Located in `results/{cluster_name}/xray_plots/`
+  - Display the classification of X-ray sources based on their properties
+<p align="center">
+  <img src="results/NGC_6809/xray_plot/Xray_classification.png" width="50%">
+</p>
+- **Candidate counterparts**
+  - Located in `results/{cluster_name}/candidates/`
+  - Show CMD with all candidates to be an optical counterpart.
+  - Each candidate is colored according to its CMD region and labeled with its ID.
+<p align="center">
+  <img src="results/NGC_6809/candidates/CMD_275_336_counterparts.png" width="30%">
+  <img src="results/NGC_6809/candidates/CMD_438_606_counterparts.png" width="30%">
+  <img src="results/NGC_6809/candidates/CMD_606_814_counterparts.png" width="30%">
+</p>
+
 ---
 ## 9) Future Work
 

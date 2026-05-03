@@ -117,7 +117,7 @@ def run_crossmatch_pipeline(optical_data: pd.DataFrame,
             Color1, Color2 = get_color_columns(CMD_config)
 
             # --- Define output directory ---
-            output_dir = os.path.join("results", cluster_name, "optical_counterparts_plots")
+            output_dir = os.path.join("results", cluster_name, "candidates")
 
             # Create directory if it doesn't exist
             os.makedirs(output_dir, exist_ok=True)
@@ -192,5 +192,5 @@ def run_crossmatch_pipeline(optical_data: pd.DataFrame,
             plt.show()
 
     df_matches.drop(columns=["275 - 336", "336_Mag", "438 - 606", "606_Mag", "606 - 814", "814_Mag"], inplace=True)
-    
+
     return df_matches
