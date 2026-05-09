@@ -172,10 +172,13 @@ def run_crossmatch_pipeline(optical_data: pd.DataFrame,
             # Apply adjustText to avoid overlaps
             adjust_text(
                 texts,
-                expand_points=(1.2, 1.2),
-                expand_text=(1.2, 1.2),
-                force_text=0.5,
-                arrowprops=dict(arrowstyle="-", color='gray', lw=0.5)
+                expand=(1.2, 1.2),
+                force_text=(0.5, 0.5),
+                arrowprops=dict(
+                    arrowstyle="-",
+                    color="gray",
+                    lw=0.5
+                )
             )
 
             plt.gca().invert_yaxis()

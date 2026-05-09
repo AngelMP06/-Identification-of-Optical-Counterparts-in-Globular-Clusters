@@ -18,8 +18,7 @@ def finalize_output(df):
     df["Prob_CV (%)"] = (df["CV"] * 100).round(1)
     df["Prob_LMXRB (%)"] = (df["LMXRB"] * 100).round(1)
     df["P_counterpart (%)"] = (df["p_final"] * 100).round(1)
-    df["P_Xray_source (%)"] = (df["total_prob"] * 100).round(1)
 
     return df[["id_candidate", "Xray source", "opt_id", "Hardness_classification", "Mv vs xray", 
                "pos_0", "pos_1", "pos_2", "radius", "n_sources", 
-               "Prob_AB (%)", "Prob_CV (%)", "Prob_LMXRB (%)",  "P_Xray_source (%)", "P_counterpart (%)"]]
+               "Prob_AB (%)", "Prob_CV (%)", "Prob_LMXRB (%)", "P_counterpart (%)"]]

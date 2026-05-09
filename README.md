@@ -39,24 +39,32 @@ cd <your-repo-folder>
 ```
 ### 3.3) Create a virtual environment
 ```bash
-py -3.11 -m venv test_env
+py -3.11 -m venv .venv
 ```
 
 ### 3.4) Activate environment (Windows)
 ```bash
-test_env\Scripts\activate
+.venv\Scripts\activate
 ```
 ### 3.5) Install dependencies
 ```bash
-pip install -r requirements.txt```
+pip install -r requirements.txt
+```
 
-###  3.6) Dependencies
+### 3.6) Install dependencies in a Jupyter notebook 
+```bash
+!pip install -r requirements.txt
+```
+
+###  3.7) Dependencies
 * pandas
 * numpy
 * matplotlib
 * seaborn
 * scikit-learn
 * scipy
+* adjustText
+* astropy
 
 > Note: On Windows, avoid using paths with special characters (e.g., accents) when installing dependencies.
 
@@ -69,6 +77,7 @@ Run the full pipeline:
 ```bash
 python -m src.main
 ```
+
 You can also change the parameters of the **run_full_pipeline** function:
 ```bash
 run_full_pipeline("NGC_6809", 
